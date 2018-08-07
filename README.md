@@ -115,9 +115,7 @@ $ gitlab issue 12 16 21 --close
 # `gitlab merge`
 
 ```sh
-$ gitlab merge <id>
-$ gitlab merge ls
-$ gitlab merge new
+$ gitlab merge <id> [options]
 ```
 
 ## Basic
