@@ -1,0 +1,25 @@
+#!/usr/bin/env node
+
+/*
+  gitlab-ls
+  Display or filter a list of issues or merge request
+
+  $ gitlab ls <issues|merges>--option [arg]
+*/
+
+const program = require('commander')
+const args = require('../lib/args')(process)
+const type = require('../lib/type')(args)
+const ListCmd = require('../lib/cmd/List')
+
+program
+  .option('-f, --filter <type> <query>', 'Filter by parameter')
+  .parse(process.argv)
+
+const List = new ListCmd(type)
+
+if (program.filter) {
+  List.filter(program.filter)
+} else {
+  List.display()
+}

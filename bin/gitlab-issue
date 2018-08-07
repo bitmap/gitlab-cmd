@@ -1,0 +1,55 @@
+#!/usr/bin/env node
+
+/*
+  gitlab-issue
+  Edit issue(s)
+
+  $ gitlab issue <id...> --option [arg]
+*/
+
+const program = require('commander')
+const args = require('../lib/args')(process)
+const Issue = require('../lib/cmd/Issue')
+
+program
+  .option('-i, --info', 'List out all data for this issue as a JSON object')
+  .option('-c, --close', 'Close issue')
+  .option('-s, --state [close|reopen]', 'Set issue state')
+  .option('-a, --assign <id|username>', 'Assign issue to user')
+  .option('-b, --board', 'Show which board issue belongs to')
+  .option('-m, --move [board]', 'Move issue to board')
+  .option('--ls-labels', 'List issue labels')
+  .option('--add-label <label>', 'Add label')
+  .option('--remove-label <label>', 'Remove label')
+  .option('--edit-title', 'Edit issue title')
+  .option('--md-description', 'Translate description from markdown to HTML')
+  .option('--delete', 'Delete issue')
+
+  // Args
+  .parse(process.argv)
+
+if (!args._.length) {
+  console.log('No issue number specified.')
+  process.exit(1)
+}
+
+function processArguments (ID) {
+  const issue = new Issue(ID)
+
+  if (program.info) issue.getInfo()
+  if (program.close) issue.setState('close')
+  if (program.state) issue.setState(program.state)
+  if (program.assign) issue.assignUser(program.assign)
+  if (program.lsLabels) issue.getLabels()
+  if (program.addLabel) issue.addLabel(program.addLabel)
+  if (program.removeLabel) issue.removeLabel(program.removeLabel)
+  if (program.editTitle) issue.editTitle()
+  if (program.board) issue.getBoard()
+  if (program.move) issue.moveToBoard(program.move)
+  if (program.mdDescription) issue.descriptionToMarkdown()
+  if (program.delete) issue.delete()
+}
+
+for (var i = 0; i < args._.length; i += 1) {
+  processArguments(args._[i])
+}

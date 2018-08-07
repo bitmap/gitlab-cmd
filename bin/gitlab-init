@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+
+if [ -f ./gitlab.json ]; then
+  echo "Already initialized!"
+else
+  touch gitlab.json;
+  read -p "Please enter the path to your project. (e.g. 'username/project') "  project
+  read -p "What is the name of your default branch (e.g. 'master') "  branch
+  echo { \"repo\": \"$project\", \"defaultBranch\": \"$branch\" } > ./gitlab.json
+fi

@@ -1,0 +1,33 @@
+#!/usr/bin/env node
+
+/*
+  gitlab-query
+  Query the Gitlab API for whatever
+
+  $ gitlab query <query>
+
+  Examples:
+    $ gitlab query issues?state=closed
+    $ gitlab query "merge_requests?milestone=release"
+    $ gitlab query "issues?search=really obscure bug"
+*/
+
+const program = require('commander')
+const jsome = require('jsome')
+const req = require('../lib/requests')
+const args = require('../lib/args')(process)
+
+program.parse(process.argv)
+
+if (!args._.length) {
+  console.log('\n No query specified. Please provide a query string')
+  console.log(' Example: $ gitlab query "issues?search=really obscure bug"')
+  process.exit(1)
+}
+
+req.project
+  .get(encodeURI(args._))
+  .then(res => {
+    jsome(res)
+  })
+  .catch(err => console.log(err.error))

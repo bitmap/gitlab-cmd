@@ -1,0 +1,52 @@
+module.exports = {
+  'id': 9000,
+  'iid': 1,
+  'project_id': 111,
+  'title': 'Test Merge Request Data',
+  'description': null,
+  'state': 'merged',
+  'created_at': '2018-01-01T12:00:00.000Z',
+  'updated_at': '2018-04-01T15:30:00.000Z',
+  'target_branch': 'master',
+  'source_branch': 'development',
+  'upvotes': 5,
+  'downvotes': 1,
+  'author': {
+    'id': 138,
+    'name': 'Cabe Branson',
+    'username': 'cabe',
+    'state': 'active',
+    'avatar_url': '',
+    'web_url': ''
+  },
+  'assignee': {
+    'id': 138,
+    'name': 'Cabe Branson',
+    'username': 'cabe',
+    'state': 'active',
+    'avatar_url': '',
+    'web_url': ''
+  },
+  'source_project_id': 111,
+  'target_project_id': 111,
+  'labels': ['Bugfix'],
+  'work_in_progress': false,
+  'milestone': null,
+  'merge_when_pipeline_succeeds': false,
+  'merge_status': 'can_be_merged',
+  'sha': '1a2b3c4d5e6f7g8h9i0j9k8l7m6n5o4p3q2r1s0t',
+  'merge_commit_sha': 't0s1r2q3p4o5n6m7l8k9j0i9h8g7f6e5d4c3b2a1',
+  'user_notes_count': 0,
+  'discussion_locked': null,
+  'should_remove_source_branch': null,
+  'force_remove_source_branch': true,
+  'web_url': '',
+  'time_stats': {
+    'time_estimate': 0,
+    'total_time_spent': 0,
+    'human_time_estimate': null,
+    'human_total_time_spent': null
+  },
+  'subscribed': true,
+  'changes_count': '5'
+}

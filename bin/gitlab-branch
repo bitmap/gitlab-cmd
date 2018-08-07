@@ -1,0 +1,78 @@
+#!/usr/bin/env node
+
+/*
+  gitlab branch
+  Gitlab branch management
+
+  $ gitlab branch [option]
+*/
+
+const program = require('commander')
+const req = require('../lib/requests')
+const branch = require('git-branch')
+const chalk = require('chalk')
+
+program
+  .option('--list', 'List project branches')
+  .option('--new <branch_name>', 'Create a new branch from current')
+  .option('--delete <branch_name>', 'Delete a branch')
+  .option('--merge <merge_request>', 'Swicth to branch from merge request')
+  .parse(process.argv)
+
+if (program.list) {
+  req.project.get('repository/branches').then(res => {
+    console.log()
+    res.map(branch => console.log(` ${branch.name}`))
+  })
+}
+
+if (program.new) {
+  if (typeof program.new !== 'string') {
+    console.log(`\n ${chalk.red('Error!')} New branch names must be a string`)
+    process.exit(1)
+  }
+
+  const newBranch = encodeURI(program.new)
+  const sourceBranch = branch.sync()
+  const query = `branch=${newBranch}&ref=${sourceBranch}`
+
+  req.project
+    .post('repository/branches', query)
+    .then(res => {
+      console.log(
+        `\n New branch ${chalk.yellow(
+          res.name
+        )} created from branch ${chalk.yellow(sourceBranch)}`
+      )
+    })
+    .catch(err => {
+      console.log(
+        `\n ${chalk.red('Error!')} ${err.error.message} - ${chalk.yellow(
+          program.new
+        )}`
+      )
+    })
+}
+
+if (program.delete) {
+  req.project
+    .delete(`repository/branches/${program.delete}`)
+    .then(() => {
+      console.log(`\n Branch ${chalk.yellow(program.delete)} was deleted.`)
+    })
+    .catch(err => {
+      console.log(
+        `\n ${chalk.red('Error!')} ${err.error.message} - ${chalk.yellow(
+          program.delete
+        )}`
+      )
+    })
+}
+
+if (program.merge) {
+  const ID = parseInt(program.merge, 10)
+
+  req.merge_requests.get(ID).then(res => {
+    console.log(`\n git checkout ${res.source_branch}`)
+  })
+}

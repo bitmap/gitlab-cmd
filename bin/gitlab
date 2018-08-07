@@ -1,0 +1,104 @@
+#!/usr/bin/env node
+
+/*
+  gitlab
+  GitLab CLI
+
+  $ gitlab [option] [command]
+*/
+
+process.env.NODE_CONFIG_DIR = './'
+process.env.NODE_CONFIG_ENV = 'gitlab.config'
+
+const V = require('../package.json').version
+const program = require('commander')
+const req = require('../lib/requests')
+const args = require('../lib/args')(process)
+const chalk = require('chalk')
+const jsome = require('jsome')
+
+const users = require('../lib/actions/users')
+
+program
+  .version(V)
+  .alias('gl')
+  .command('init', 'Initialize repository')
+  .command('issue <ids...>', 'Edit issues').alias('i')
+  .command('merge <ids...>', 'Edit merge requests').alias('mr')
+  .command('list <type>', 'Display list of issues or merge requests').alias('ls')
+  .command('new <type>', 'Create a new issues or merge requests').alias('n')
+  .command('query <queryString>', 'Query the Gitlab API')
+  .command('branch', 'List or create branches')
+
+  .option('-P, --project', 'Display project details')
+  .option('-L, --labels', 'Display a list of project labels')
+  .option('-M, --milestones', 'Display a list of project milestones')
+  .option('-B, --boards', 'Display a list of project issue boards')
+  .option('-U, --users', 'Display a list of users')
+
+  .parse(process.argv)
+
+if (program.project) {
+  req.project
+    .get('')
+    .then(project => {
+      jsome(project)
+    })
+    .catch(err => console.log(err))
+}
+
+if (program.labels) {
+  req.project
+    .get('labels')
+    .then(labels => {
+      console.log('')
+      labels.map(label => {
+        let { name, open_issues_count, color } = label
+        name = chalk.bgHex(color)(name)
+        open_issues_count = chalk.green(open_issues_count)
+
+        const labelString = `  ${open_issues_count} \u2022 ${name} `
+
+        console.log(labelString)
+      })
+    })
+    .catch(err => console.log(err))
+}
+
+if (program.milestones) {
+  req.project
+    .get('milestones')
+    .then(milestones => {
+      console.log('')
+      milestones.map(milestone => {
+        let { title, state, start_date, due_date } = milestone
+        let dates = ''
+        if (state === 'active') title = chalk.green(title)
+        else title = chalk.red(title)
+
+        if (start_date !== null) dates += `${start_date} --> `
+        if (due_date !== null) dates += due_date
+        console.log(`  ${title} ${dates}`)
+      })
+    })
+    .catch(err => console.log(err))
+}
+
+if (program.boards) {
+  req.project
+    .get('boards')
+    .then(boards => {
+      console.log('')
+      boards.map(board =>
+        board.lists.map(list => console.log(`  ${chalk.bgHex(list.label.color)(list.label.name)}`))
+      )
+    })
+    .catch(err => console.log(err))
+}
+
+if (program.users) {
+  users.findUser(args.users).then(users => {
+    console.log('')
+    users.map(user => console.log(`  ${user}`))
+  })
+}

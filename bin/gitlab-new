@@ -1,0 +1,35 @@
+#!/usr/bin/env node
+
+/*
+  gitlab-new
+  Create a new issue or merge request
+
+  $ gitlab new <issue|merge> --option [arg]
+*/
+
+const program = require('commander')
+const args = require('../lib/args')(process)
+const type = require('../lib/type')(args)
+const Create = require('../lib/cmd/New')
+
+program
+  .option('-t, --title <title>', 'Set title (required)')
+  .option('-d, --desc <description>', 'Set description')
+  .option('-m, --milestone <milestoneID>', 'Set milestone')
+  .option('-l, --label <label>', 'Set label')
+  .option('-u, --assignee <id|username>', 'Assign to user')
+
+  // Merge requests only
+  .option('--target <branch>', 'Target branch (required)')
+  .option('--source <branch>', 'Source branch (default: current branch)')
+  .option('--remove-branch <boolean>', 'Remove source branch?', true)
+  .option('-P, --prompt', 'Create via interactive prompt')
+  .parse(process.argv)
+
+const newIssue = new Create(type, args)
+
+if (program.prompt || !program.title) {
+  newIssue.prompt()
+} else {
+  newIssue.parseArgs()
+}

@@ -1,0 +1,56 @@
+#!/usr/bin/env node
+
+/*
+  gitlab-merge
+  Create a new merge request.
+
+  $ gitlab merge <id...> --option [arg]
+*/
+
+const program = require('commander')
+const args = require('../lib/args')(process)
+const MergeRequest = require('../lib/cmd/MergeRequest')
+
+program
+  // Basic Options
+  .option('-i, --info', 'List out all data for this merge as a JSON object')
+  .option('-c, --close', 'Close merge request')
+  .option('-s, --state <close|reopen>', 'Set merge request state')
+  .option('-a. --assign <id|username>', 'Assign merge request to user')
+  .option('-m, --merge', 'Accept merge request and merge into target branch')
+  .option('--ls-labels', 'List merge request labels')
+  .option('--add-label <label>', 'Add label to merge request')
+  .option('--remove-label <label>', 'Remove Label from merge request')
+  .option('--edit-title', 'Edit merge request title')
+  .option('--status', 'Check merge request status')
+  .option('--wip', 'Toggle "Work in Progress" status')
+  .option('--delete', 'Delete merge request')
+
+  // Args
+  .parse(process.argv)
+
+if (!args._.length) {
+  console.log('\n No merge request specified.')
+  process.exit(1)
+}
+
+function processArguments (ID) {
+  const mergeRequest = new MergeRequest(ID)
+
+  if (program.info) mergeRequest.getInfo()
+  if (program.close) mergeRequest.setState('close')
+  if (program.state) mergeRequest.setState(program.state)
+  if (program.assign) mergeRequest.assignUser(program.assign)
+  if (program.lsLabels) mergeRequest.getLabels()
+  if (program.addLabel) mergeRequest.addLabel(program.addLabel)
+  if (program.removeLabel) mergeRequest.removeLabel(program.removeLabel)
+  if (program.editTitle) mergeRequest.editTitle()
+  if (program.merge) mergeRequest.merge()
+  if (program.status) mergeRequest.getStatus()
+  if (program.wip) mergeRequest.toggleWIP()
+  if (program.delete) mergeRequest.delete()
+}
+
+for (var i = 0; i < args._.length; i += 1) {
+  processArguments(args._[i])
+}
