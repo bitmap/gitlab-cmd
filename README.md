@@ -1,8 +1,8 @@
-# gitlab-cli
+# gitlab-cmd
 
 ## Setup
 
-Requires Node.js
+Requires Node.js. Install the package globally:
 
 ```
 npm install -g gitlab-cmd
