@@ -53,7 +53,8 @@ if (program.labels) {
     .then(labels => {
       console.log('')
       labels.map(label => {
-        let { name, open_issues_count, color } = label
+        const { color } = label
+        let { name, open_issues_count } = label
         name = chalk.bgHex(color)(name)
         open_issues_count = chalk.green(open_issues_count)
 
@@ -71,7 +72,8 @@ if (program.milestones) {
     .then(milestones => {
       console.log('')
       milestones.map(milestone => {
-        let { title, state, start_date, due_date } = milestone
+        const { state, start_date, due_date } = milestone
+        let { title } = milestone
         let dates = ''
         if (state === 'active') title = chalk.green(title)
         else title = chalk.red(title)
@@ -90,8 +92,7 @@ if (program.boards) {
     .then(boards => {
       console.log('')
       boards.map(board =>
-        board.lists.map(list => console.log(`  ${chalk.bgHex(list.label.color)(list.label.name)}`))
-      )
+        board.lists.map(list => console.log(`  ${chalk.bgHex(list.label.color)(list.label.name)}`)))
     })
     .catch(err => console.log(err))
 }

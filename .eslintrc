@@ -4,25 +4,9 @@
     "es6": true
   },
   "extends": [
-    "eslint:recommended"
+    "@cabe"
   ],
   "rules": {
-    "indent": [
-      "error",
-      2
-    ],
-    "linebreak-style": [
-      "error",
-      "unix"
-    ],
-    "quotes": [
-      "error",
-      "single"
-    ],
-    "semi": [
-      "error",
-      "never"
-    ],
     "no-console": 0
   }
 }

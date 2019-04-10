@@ -33,7 +33,7 @@ if (!args._.length) {
   process.exit(1)
 }
 
-function processArguments (ID) {
+function processArguments(ID) {
   const issue = new Issue(ID)
 
   if (program.info) issue.getInfo()
@@ -50,6 +50,6 @@ function processArguments (ID) {
   if (program.delete) issue.delete()
 }
 
-for (var i = 0; i < args._.length; i += 1) {
+for (let i = 0; i < args._.length; i += 1) {
   processArguments(args._[i])
 }
