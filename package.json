@@ -1,11 +1,11 @@
 {
   "name": "gitlab-cmd",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "GitLab command-line interface",
-  "repository": "https://gitlab.com/cabe.io/gitlab-cmd/",
+  "repository": "https://gitlab.com/cabe.dev/gitlab-cmd/",
   "scripts": {
     "test": "mocha test/index.test.js",
-    "lint": "eslint --fix bin/* lib/**/*.js"
+    "lint": "eslint bin/* lib/**/*.js"
   },
   "bin": {
     "gitlab": "./bin/gitlab"
@@ -22,18 +22,14 @@
     "markdown": "^0.5.0",
     "minimist": "^1.2.0",
     "parse-git-config": "^1.1.1",
-    "request": "^2.85.0",
+    "request": "^2.88.0",
     "request-promise-native": "^1.0.5"
   },
   "devDependencies": {
+    "@cabe/eslint-config": "^0.1.0",
+    "eslint": "^5.16.0",
     "chai": "^4.1.2",
-    "eslint": "^4.19.1",
-    "eslint-config-standard": "^11.0.0",
-    "eslint-plugin-import": "^2.11.0",
-    "eslint-plugin-node": "^5.2.1",
-    "eslint-plugin-promise": "^3.7.0",
-    "eslint-plugin-standard": "^3.1.0",
     "mocha": "^4.1.0",
-    "nock": "^9.2.5"
+    "nock": "^10.0.6"
   }
 }
